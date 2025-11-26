@@ -12,8 +12,11 @@ import android.util.Pair
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +26,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 import androidx.core.app.ActivityCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -38,9 +44,13 @@ import mx.uacj.juego_ra.gestor_permisos.ParaLaSolictudDePermisos
 
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import mx.uacj.juego_ra.ui.atomos.VistaCamara
+import mx.uacj.juego_ra.ui.atomos.VistaReproductorAudio
+import mx.uacj.juego_ra.ui.controladores.NavegacionApp
 import mx.uacj.juego_ra.ui.pantallas.Principal
 import mx.uacj.juego_ra.ui.theme.Juego_raTheme
 import mx.uacj.juego_ra.view_models.GestorUbicacion
+import mx.uacj.juego_ra.view_models.servicios.ServicioCamara
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -49,17 +59,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var puente_para_recivir_updates_ubicacion: LocationCallback
 
     private var ubicacion_actual = mutableStateOf<Location>(Location("juego_ra"))
+    private var servicio_de_camara = ServicioCamara()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        puente_para_recivir_updates_ubicacion = object: LocationCallback() {
-            override fun onLocationResult(ubicaciones: LocationResult) {
-                for(ubicacion in ubicaciones.locations){
-                    actualizar_ubicacion(ubicacion)
-                }
-            }
-        }
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -78,16 +81,19 @@ class MainActivity : ComponentActivity() {
                             mostrar_resutlado_de_los_permisos = true
 
                             obtener_ubicacion_del_usuario(
-                                cuando_obtenga_la_ultima_posicion_correcta = {
-                                    gestor_ubicacion.actualizar_ubicacion_actual(ubicacion_actual.value)
+                                cuando_obtenga_la_ultima_posicion_correcta = { ubicaion_nueva ->
+                                    Log.w("UBicacion nueva", "la ubicaicon nueva es ${ubicaion_nueva}")
+                                    gestor_ubicacion.actualizar_ubicacion_actual(ubicaion_nueva)
                                 },
 
+                                /*
                                 cuando_falle_al_obtener_ubicacion = { error_encontrado ->
                                     texto_de_ubicacion = "Error: ${error_encontrado.localizedMessage}"
                                 },
                                 cuando_la_ultima_posicion_sea_nula = {
                                     texto_de_ubicacion = "Error: la ubicacion es nula por alguna razon"
                                 }
+                                 */
                             )
                         },
                         sin_permisos_obtenidos = {
@@ -97,10 +103,20 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {}
 
-                    Principal(
-                        modificador = Modifier.padding(innerPadding),
-                        ubicacion = ubicacion_actual.value
-                    )
+
+                         //VistaCamara(servicio_de_camara = servicio_de_camara, modificador = Modifier.padding(innerPadding))
+                    Box(modifier = Modifier.padding(innerPadding)){
+                        /*
+                        Image(
+                            painter = painterResource(R.drawable.imagen_1),
+                            contentDescription = "Una imagen de un arbol cuyas hojas son alas de mariposa. Muy bonita foto, lastima que si lees esto es porque no puedes ver.",
+                            contentScale = ContentScale.FillHeight,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        */
+                        //NavegadorPrincipal(modificador = Modifier.padding(innerPadding))
+                        NavegacionApp()
+                    }
 
                 }
             }
@@ -114,11 +130,19 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("MissingPermission")
     fun obtener_ubicacion_del_usuario(
-        cuando_obtenga_la_ultima_posicion_correcta: (Pair<Double, Double>) -> Unit,
-        cuando_falle_al_obtener_ubicacion: (Exception) -> Unit,
-        cuando_la_ultima_posicion_sea_nula: () -> Unit
+        cuando_obtenga_la_ultima_posicion_correcta: (Location) -> Unit,
+        // cuando_falle_al_obtener_ubicacion: (Exception) -> Unit,
+        // cuando_la_ultima_posicion_sea_nula: () -> Unit
     ){
         conexion_para_obtener_ubicacion = LocationServices.getFusedLocationProviderClient(this)
+
+        puente_para_recivir_updates_ubicacion = object: LocationCallback() {
+            override fun onLocationResult(ubicaciones: LocationResult) {
+                for(ubicacion in ubicaciones.locations){
+                    cuando_obtenga_la_ultima_posicion_correcta(ubicacion)
+                }
+            }
+        }
 
         if(tenemos_los_permisos_de_ubicacion()){
             val constructor_del_puente_para_la_ubicacion = LocationRequest
@@ -134,6 +158,7 @@ class MainActivity : ComponentActivity() {
             )
 
 
+            /*
             conexion_para_obtener_ubicacion.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY,
                 CancellationTokenSource().token)
@@ -145,9 +170,10 @@ class MainActivity : ComponentActivity() {
                         cuando_la_ultima_posicion_sea_nula()
                     }
                 }
-                .addOnFailureListener{ error -> 
+                .addOnFailureListener{ error ->
                     cuando_falle_al_obtener_ubicacion(error)
                 }
+             */
         }
     }
 
@@ -177,11 +203,11 @@ class MainActivity : ComponentActivity() {
     private fun tenemos_los_permisos_de_ubicacion(): Boolean{
         return (
                 ActivityCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION
+                    this, Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+                        ActivityCompat.checkSelfPermission(
+                            this, Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
                 )
     }
 }
@@ -190,5 +216,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Juego_raTheme {
+        NavegacionApp()
     }
+
 }

@@ -1,0 +1,18 @@
+package mx.uacj.juego_ra.ui.controladores
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+object OpcionNavegacionPantallaPrincipal
+
+@Serializable
+object OpcionNavegacionPantallaPistaInformacion
+
+@Serializable
+object OpcionNavegacionPantallaPistaInteractuable
+
+@Serializable
+object OpcionNavegacionPantallaPistaAgitable
+
+@Serializable
+object OpcionNavegacionPantallaPistaCamara

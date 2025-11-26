@@ -2,6 +2,7 @@ package mx.uacj.juego_ra.repositorios.estaticos
 
 import android.location.Location
 import androidx.collection.objectListOf
+import mx.uacj.juego_ra.R
 import mx.uacj.juego_ra.modelos.Boton
 import mx.uacj.juego_ra.modelos.Informacion
 import mx.uacj.juego_ra.modelos.InformacionInteractiva
@@ -16,7 +17,7 @@ object RepositorioPruebas{
             },
             cuerpo = Informacion(
                 texto = "Prueba de texto para comprobar esto pista 1",
-                imagen = null
+                imagen = R.drawable.imagen_1
             )
         ),
         Pista(
@@ -51,11 +52,11 @@ object RepositorioPruebas{
                 lista_de_botones = listOf(
                     Boton(
                             texto = "Ir a pantalla 1",
-                            direccion = null
+                            direccion = "pista_1"
                         ),
                     Boton(
                         texto = "Ir a pantalla dos",
-                        direccion = null
+                        direccion = "pista_2"
                     )
                 )
             )

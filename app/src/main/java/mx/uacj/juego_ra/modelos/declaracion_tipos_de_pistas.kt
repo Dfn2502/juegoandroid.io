@@ -9,12 +9,12 @@ public interface PistaGenerica{
 data class Informacion( // Es la pista con solo texto y posiblemente una imagen
         override val tipo: TiposDePistas = TiposDePistas.texto,
         override val texto: String,
-        val imagen: String? = null
+        val imagen: Int? = null
 ) : PistaGenerica
 
 data class Boton(
     val texto: String,
-    val direccion: PistaGenerica?
+    val direccion: String
 )
 
 data class InformacionInteractiva(
