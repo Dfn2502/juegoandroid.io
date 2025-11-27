@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import androidx.core.app.ActivityCompat
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     ) {}
 
 
-                         //VistaCamara(servicio_de_camara = servicio_de_camara, modificador = Modifier.padding(innerPadding))
+                    //VistaCamara(servicio_de_camara = servicio_de_camara, modificador = Modifier.padding(innerPadding))
                     Box(modifier = Modifier.padding(innerPadding)){
                         /*
                         Image(
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                         )
                         */
                         //NavegadorPrincipal(modificador = Modifier.padding(innerPadding))
-                        NavegacionApp()
+                        NavegacionApp(gestor_ubicacion)
                     }
 
                 }
@@ -210,13 +210,4 @@ class MainActivity : ComponentActivity() {
                         ) == PackageManager.PERMISSION_GRANTED
                 )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Juego_raTheme {
-        NavegacionApp()
-    }
-
 }

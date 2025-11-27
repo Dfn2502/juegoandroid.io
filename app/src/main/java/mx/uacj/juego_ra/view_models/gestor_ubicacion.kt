@@ -6,6 +6,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mx.uacj.juego_ra.repositorios.RepositorioUbicacion
 import javax.inject.Inject
 
@@ -13,10 +15,11 @@ import javax.inject.Inject
 class GestorUbicacion @Inject constructor(
     private val repositorio_ubicacion: RepositorioUbicacion
 ): ViewModel(){
-    //private val _ubicacion_actual: MutableState<Location> = mutableStateOf(Location("juego_ra"))
-    val ubicacion_actual: State<Location> = repositorio_ubicacion.ubicacion
+    private val _ubicacion_actual = MutableStateFlow<Location?>(null)
 
-    fun actualizar_ubicacion_actual(ubicacion_nueva: Location){
-        repositorio_ubicacion.ubicacion.value = ubicacion_nueva
+    val ubicacion_actual = _ubicacion_actual.asStateFlow()
+
+    fun actualizar_ubicacion_actual(ubicacion_nueva: Location) {
+        _ubicacion_actual.value = ubicacion_nueva
     }
 }

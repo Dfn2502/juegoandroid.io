@@ -8,22 +8,34 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import android.location.Location
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+
+interface RepositorioUbicacion {
+    val ubicacion: StateFlow<Location?>
+    fun actualizarUbicacion(nueva: Location)
+}
+
+class InstanciaRepositorioUbicacion @Inject constructor() : RepositorioUbicacion {
+
+    private val _ubicacion = MutableStateFlow<Location?>(null)
+    override val ubicacion: StateFlow<Location?> = _ubicacion.asStateFlow()
+
+    override fun actualizarUbicacion(nueva: Location) {
+        _ubicacion.value = nueva
+    }
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
-object repositorio_ubicacion_singleton{
+object RepositorioUbicacionModule {
+
     @Provides
     @Singleton
-    fun crea_repostiorio_gestor_de_ubicacion(): RepositorioUbicacion{
+    fun provideRepositorioUbicacion(): RepositorioUbicacion {
         return InstanciaRepositorioUbicacion()
     }
 }
 
-
-class InstanciaRepositorioUbicacion(
-    override val ubicacion: MutableState<Location> = mutableStateOf(Location("juego_ra"))
-): RepositorioUbicacion {}
-
-interface RepositorioUbicacion {
-    val ubicacion: MutableState<Location>
-}

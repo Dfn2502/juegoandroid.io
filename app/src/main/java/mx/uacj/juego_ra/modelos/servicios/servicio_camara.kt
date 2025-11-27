@@ -2,7 +2,6 @@ package mx.uacj.juego_ra.modelos.servicios
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.CameraSelector.DEFAULT_FRONT_CAMERA
 import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider

@@ -20,8 +20,6 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 fun PantallaPermisos(
     onPermisosConcedidos: () -> Unit
 ) {
-    // 1. Define aquí todos los permisos que tu app necesita.
-    // He añadido CAMERA porque también la usarás.
     val permissionsState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -30,13 +28,9 @@ fun PantallaPermisos(
         )
     )
 
-    // 2. Este bloque se ejecuta una vez cuando la pantalla aparece.
-    // Comprueba si los permisos están concedidos.
     if (permissionsState.allPermissionsGranted) {
-        // Si ya están concedidos, navega inmediatamente a la siguiente pantalla.
         onPermisosConcedidos()
     } else {
-        // Si no están concedidos, muestra una pantalla explicativa.
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,13 +50,10 @@ fun PantallaPermisos(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
-                // Al hacer clic, se muestra el diálogo de permisos del sistema.
                 permissionsState.launchMultiplePermissionRequest()
             }) {
                 Text("Conceder Permisos")
             }
-
-            // Este efecto se dispara después de que el usuario responde al diálogo de permisos.
             LaunchedEffect(permissionsState.allPermissionsGranted) {
                 if (permissionsState.allPermissionsGranted) {
                     onPermisosConcedidos()

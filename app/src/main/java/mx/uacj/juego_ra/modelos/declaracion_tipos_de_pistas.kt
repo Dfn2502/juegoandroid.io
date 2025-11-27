@@ -20,5 +20,5 @@ data class Boton(
 data class InformacionInteractiva(
     override val tipo: TiposDePistas = TiposDePistas.interactiva,
     override val texto: String?,
-    val lista_de_botones: List<Boton>
+    val ruta: String
 ) : PistaGenerica

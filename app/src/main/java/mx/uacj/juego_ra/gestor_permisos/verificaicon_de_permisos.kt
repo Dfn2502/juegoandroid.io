@@ -9,7 +9,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.common.util.CollectionUtils.listOf
 import java.util.Collections.emptyList
 
 @OptIn(ExperimentalPermissionsApi::class)

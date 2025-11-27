@@ -8,6 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -15,13 +17,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import mx.uacj.juego_ra.ui.theme.Juego_raTheme
+import mx.uacj.juego_ra.view_models.ControladorGeneral
+import mx.uacj.juego_ra.view_models.GestorUbicacion
 
 @Composable
 fun PantallaContexto(
+    navegador: NavHostController,
     onContinuarClick: () -> Unit,
+    gestorUbicacion: GestorUbicacion = hiltViewModel(),
     modificador: Modifier = Modifier
 ) {
+    val ubicacion by gestorUbicacion.ubicacion_actual.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     Surface(
@@ -32,9 +42,9 @@ fun PantallaContexto(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .verticalScroll(scrollState), // Para que el texto largo sea deslizable
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween // Empuja el botón hacia abajo
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
@@ -43,60 +53,48 @@ fun PantallaContexto(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = "Archivo: Las Notas de los Reprobados",
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Text(
                     text = "Tu Misión:",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
-                    text = "Asumes el rol de un investigador universitario. Tu objetivo es descubrir qué sucedió con cinco alumnos de la carrera de Diseño Digital de Medios Interactivos (DDMI) seleccionados para una misteriosa materia experimental llamada \"Proyecto SINAPSIS_2.1\".\n\n" +
-                            "A lo largo del campus, deberás visitar puntos clave, escanear objetos, resolver acertijos y recopilar pistas digitales que revelarán la verdad oculta detrás de su aparente locura colectiva.",
+                    text = "Asumes el rol de un investigador universitario. Tu objetivo es descubrir qué sucedió con cinco alumnos de la carrera de DDMI seleccionados para la materia experimental Proyecto SINAPSIS_2.1...\nDirígete a la entrada del campus para iniciar.",
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Justify, // Justifica el texto para un look más formal
+                    textAlign = TextAlign.Justify,
                     lineHeight = 24.sp
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Text(
-                    text = "ADVERTENCIA: Al iniciar, tu teléfono vibrará con un mensaje:\n\n“Cinco fueron elegidos. Cinco fallaron. Encuentra sus notas antes de que te encuentren a ti.”\n\nBusca el primer código. Tu investigación comienza ahora.",
+                    text = "ADVERTENCIA: Al iniciar, tu teléfono vibrará con un mensaje...",
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
 
-            // El botón se colocará al final gracias a Arrangement.SpaceBetween
             Button(
-                onClick = onContinuarClick,
+                onClick = { onContinuarClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 16.dp),
+                enabled = ubicacion != null // Habilita solo si ya llegó ubicación
             ) {
                 Text("COMENZAR INVESTIGACIÓN")
             }
-        }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewPantallaContexto() {
-    Juego_raTheme {
-        PantallaContexto(onContinuarClick = {})
+            if (ubicacion == null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Esperando ubicación del dispositivo...")
+            }
+        }
     }
 }

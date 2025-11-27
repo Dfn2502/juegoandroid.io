@@ -5,7 +5,7 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.6.2"
 activityCompose = "1.10.0"
 composeBom = "2024.04.01"
 
@@ -17,6 +17,8 @@ hiltAndroid = "2.56"
 hiltViewmodel = "1.3.0"
 
 # Version de la dependencia para tener un Navigation Compose
+
+hiltNavigationCompose = "1.2.0"
 navigationComposeAndroid = "2.9.5"
 
 # Version para serilziar JSON
@@ -26,9 +28,12 @@ kotlinParcelize = "1.8.10"
 # Para camara
 camerax = "1.5.0-alpha06"
 playServicesMaps = "19.2.0"
+visionCommon = "17.3.0"
+playServicesMlkitBarcodeScanning = "18.3.1"
+runtimeLivedata = "1.9.5"
 
 [libraries]
-
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -63,6 +68,9 @@ androidx-camera-video = { module = "androidx.camera:camera-video", version.ref =
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "visionCommon" }
+play-services-mlkit-barcode-scanning = { group = "com.google.android.gms", name = "play-services-mlkit-barcode-scanning", version.ref = "playServicesMlkitBarcodeScanning" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -75,5 +83,3 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 # Plugins para usar Serialization
 jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinParcelize" }
-
-
