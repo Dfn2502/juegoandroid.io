@@ -51,7 +51,6 @@ fun PantallaContexto(
         ) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                // Encabezado con efecto “documento secreto”
                 Text(
                     text = "INFORME CLASIFICADO",
                     fontSize = 32.sp,
@@ -98,7 +97,6 @@ fun PantallaContexto(
                 )
             }
 
-            // Botón destacado con estilo futurista
             Button(
                 onClick = { onContinuarClick() },
                 modifier = Modifier

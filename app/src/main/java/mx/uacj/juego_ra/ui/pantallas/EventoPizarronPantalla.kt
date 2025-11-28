@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.delay
 import mx.uacj.juego_ra.R
 import mx.uacj.juego_ra.ui.controladores.Rutas
 import mx.uacj.juego_ra.view_models.NavegacionEvento
@@ -93,7 +92,7 @@ fun EventoPizarronPantalla(
     }
 
     val colorFondo by animateColorAsState(
-        if (estaAlineado) Color(0xFF003300) else Color(0xFF330000) // Verde oscuro / Rojo oscuro
+        if (estaAlineado) Color(0xFF003300) else Color(0xFF330000)
     )
 
     Box(

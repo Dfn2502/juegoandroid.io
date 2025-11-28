@@ -1,7 +1,6 @@
 package mx.uacj.juego_ra.ui.pantallas
 
 import android.Manifest
-import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis

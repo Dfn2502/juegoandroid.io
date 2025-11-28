@@ -24,7 +24,7 @@ fun SeleccionarPantallaPista(
         when (pista.cuerpo.tipo) {
             TiposDePistas.texto -> {
                 InformacionVista(
-                    informacion_a_mostrar = pista.cuerpo as Informacion, // Suponiendo que el parámetro se llama 'informacion'
+                    informacion_a_mostrar = pista.cuerpo as Informacion,
                     controlador_general = controlador_general,
                     navegador = navegador
                 )

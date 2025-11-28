@@ -15,9 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import mx.uacj.juego_ra.modelos.InformacionInteractiva
-// --- INICIO DE LA CORRECCIÓN #1: Importar el objeto Rutas ---
 import mx.uacj.juego_ra.ui.controladores.Rutas
-// --- FIN DE LA CORRECCIÓN #1 ---
 import mx.uacj.juego_ra.view_models.ControladorGeneral
 
 @Composable

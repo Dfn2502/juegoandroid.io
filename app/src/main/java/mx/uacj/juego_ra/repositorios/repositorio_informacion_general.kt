@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import mx.uacj.juego_ra.modelos.Pista
-import mx.uacj.juego_ra.repositorios.estaticos.RepositorioPruebas // ¡IMPORTANTE! Importamos tus pistas
+import mx.uacj.juego_ra.repositorios.estaticos.RepositorioPruebas
 import javax.inject.Singleton
 
 interface RepositorioInformacionGeneral {

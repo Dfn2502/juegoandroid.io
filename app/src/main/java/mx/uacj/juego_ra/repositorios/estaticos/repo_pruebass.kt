@@ -45,6 +45,8 @@ object RepositorioPruebas {
                 longitude = -106.4322366
             },
             distancia_minima = 15f,
+
+            distancia_media  = 75,
             distancia_maxima = 150f,
             cuerpo = InformacionInteractiva(
                 texto = "Escanea el pizarrón lleno de binario. Inclina el teléfono para alinear los 0s y 1s. Audio de Luis: “El código se escribía solo… como si alguien más estuviera programando conmigo.”\nSe revela la carpeta digital: Reprobados/Notas.txt.",
