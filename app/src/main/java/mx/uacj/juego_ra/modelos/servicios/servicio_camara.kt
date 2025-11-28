@@ -30,7 +30,6 @@ class ServicioCamara: ViewModel(){
             dueño_ciclo_vida, CameraSelector.DEFAULT_BACK_CAMERA, previsualizacion_camara
         )
 
-        // Cancellation signals we're done with the camera
         try { awaitCancellation() } finally { proceso_camara_proveedor.unbindAll() }
     }
 

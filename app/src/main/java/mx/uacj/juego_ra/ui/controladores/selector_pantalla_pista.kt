@@ -19,20 +19,15 @@ fun SeleccionarPantallaPista(
     modificador: Modifier = Modifier,
     controlador_general: ControladorGeneral = hiltViewModel()
 ) {
-    // Obtenemos la pista actual del ViewModel
     val pista_actual by controlador_general.pista_actual.collectAsStateWithLifecycle()
-    // Usamos 'let' para trabajar de forma segura con la pista, evitando el '!!'
     pista_actual?.let { pista ->
         when (pista.cuerpo.tipo) {
             TiposDePistas.texto -> {
-                // --- INICIO DE LA CORRECCIÓN ---
-                // Se nombran TODOS los parámetros para evitar errores de sintaxis.
                 InformacionVista(
                     informacion_a_mostrar = pista.cuerpo as Informacion, // Suponiendo que el parámetro se llama 'informacion'
                     controlador_general = controlador_general,
                     navegador = navegador
                 )
-                // --- FIN DE LA CORRECCIÓN ---
             }
 
             TiposDePistas.interactiva -> {
@@ -43,12 +38,7 @@ fun SeleccionarPantallaPista(
                 )
             }
 
-            TiposDePistas.camara -> {
-                TODO("Pantalla para la cámara no implementada")
-            }
-
-            TiposDePistas.agitar_telefono -> {
-                TODO("Pantalla para agitar el teléfono no implementada")
+            else -> {
             }
         }
     }

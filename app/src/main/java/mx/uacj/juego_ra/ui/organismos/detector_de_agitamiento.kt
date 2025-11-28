@@ -37,7 +37,7 @@ fun DetectorAgitamiento(modificador: Modifier = Modifier,
                     val y = evento.values[1]
                     val z = evento.values[2]
 
-                    val velocidad_movimiento = abs(x) + abs(y) + abs(z) /// -4 -> 4    4 -> 4
+                    val velocidad_movimiento = abs(x) + abs(y) + abs(z)
                     if(velocidad_movimiento > sensibilidad){
                         Log.v("SENSOR_VELOCIDAD", "LA velocidad fue de ${velocidad_movimiento}")
                         contador_agitadas = contador_agitadas + 1
@@ -60,7 +60,4 @@ fun DetectorAgitamiento(modificador: Modifier = Modifier,
 
     }
 
-    /*Column {
-        Text("Cantidad de agitadas ${contador_agitadas} y la meta es ${meta_de_agitadas}")
-    }*/
 }

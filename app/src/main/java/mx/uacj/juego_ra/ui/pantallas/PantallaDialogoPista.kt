@@ -26,13 +26,10 @@ fun PantallaDialogoPista(
     textoBoton: String,
     rutaSiguiente: String
 ) {
-    val context = LocalContext.current
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.85f))
+            .background(Color(0xFF0D0D0D))
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -40,28 +37,49 @@ fun PantallaDialogoPista(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Asume que tienes una imagen 'logo_ddmi_distorsionado' en tus drawables
             Image(
                 painter = painterResource(id = R.drawable.logo_ddmi_distorsionado),
                 contentDescription = "Logo DDMI Distorsionado",
                 modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .aspectRatio(1f),
+                    .fillMaxWidth(0.5f)
+                    .aspectRatio(1f)
+                    .padding(bottom = 16.dp),
                 contentScale = ContentScale.Fit
             )
-            Spacer(Modifier.height(30.dp))
-            Text(
-                text = textoDialogo,
-                color = Color.White,
-                fontSize = 22.sp,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(40.dp))
-            Button(onClick = {
-                // Navega a la siguiente pantalla en la cadena (ej. el Scanner)
-                navegador.navigate(rutaSiguiente)
-            }) {
-                Text(textoBoton, fontSize = 18.sp)
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xAA000000), shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                    .padding(24.dp)
+            ) {
+                Text(
+                    text = textoDialogo,
+                    color = Color(0xFFEFEFEF),
+                    fontSize = 20.sp,
+                    lineHeight = 28.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Button(
+                onClick = { navegador.navigate(rutaSiguiente) },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(50.dp),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFBB86FC),
+                    contentColor = Color.Black
+                ),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = textoBoton,
+                    fontSize = 18.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
             }
         }
     }

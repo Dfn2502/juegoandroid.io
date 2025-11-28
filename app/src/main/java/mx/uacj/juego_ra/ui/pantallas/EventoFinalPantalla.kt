@@ -15,6 +15,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mx.uacj.juego_ra.R
 import mx.uacj.juego_ra.ui.controladores.Rutas
 import mx.uacj.juego_ra.view_models.ControladorGeneral
@@ -34,6 +38,10 @@ private enum class EstadoFinal {
     CONCLUSION
 }
 
+private const val AGITACIONES_NECESARIAS = 3
+private const val UMBRAL_ACELERACION = 15f
+private const val COOLDOWN_AGITACION_MS = 1000L
+
 @Composable
 fun EventoFinalPantalla(
     navegador: NavHostController,
@@ -41,19 +49,21 @@ fun EventoFinalPantalla(
 ) {
     val context = LocalContext.current
     var estado by remember { mutableStateOf(EstadoFinal.ESPERANDO_AGITACION) }
+    var agitacionesRestantes by remember { mutableIntStateOf(AGITACIONES_NECESARIAS) }
+    var enCooldown by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
-    // Sensor de agitación
-    val sensorManager = remember { context.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    val accelerometer = remember { sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) }
-
-    DisposableEffect(sensorManager, accelerometer) {
+    DisposableEffect(estado) {
+        if (estado != EstadoFinal.ESPERANDO_AGITACION) return@DisposableEffect onDispose {}
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         var acceleration = 0f
         var currentAcceleration = SensorManager.GRAVITY_EARTH
         var lastAcceleration = SensorManager.GRAVITY_EARTH
 
         val listener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
-                if (estado != EstadoFinal.ESPERANDO_AGITACION) return
+                if (enCooldown) return
                 val x = event.values[0]
                 val y = event.values[1]
                 val z = event.values[2]
@@ -61,33 +71,39 @@ fun EventoFinalPantalla(
                 currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
                 val delta = currentAcceleration - lastAcceleration
                 acceleration = acceleration * 0.9f + delta
-                if (acceleration > 12f) {
-                    estado = EstadoFinal.REPRODUCIENDO_AUDIO
+
+                if (acceleration > UMBRAL_ACELERACION) {
+                    enCooldown = true
+                    val nuevasAgitaciones = agitacionesRestantes - 1
+                    agitacionesRestantes = nuevasAgitaciones
+                    if (nuevasAgitaciones <= 0) {
+                        estado = EstadoFinal.REPRODUCIENDO_AUDIO
+                    } else {
+                        coroutineScope.launch {
+                            delay(COOLDOWN_AGITACION_MS)
+                            enCooldown = false
+                        }
+                    }
                 }
             }
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
 
         sensorManager.registerListener(listener, accelerometer, SensorManager.SENSOR_DELAY_UI)
-
         onDispose { sensorManager.unregisterListener(listener) }
     }
 
-    // Reproducción de audio
     DisposableEffect(estado) {
         if (estado != EstadoFinal.REPRODUCIENDO_AUDIO) return@DisposableEffect onDispose {}
-
         val mediaPlayer = MediaPlayer.create(context, R.raw.audio_final_ana)
         mediaPlayer.setOnCompletionListener { estado = EstadoFinal.CONCLUSION }
         mediaPlayer.start()
-
         onDispose {
             if (mediaPlayer.isPlaying) mediaPlayer.stop()
             mediaPlayer.release()
         }
     }
 
-    // UI con transición suave
     Box(modifier = Modifier.fillMaxSize()) {
         AnimatedContent(
             targetState = estado,
@@ -97,7 +113,7 @@ fun EventoFinalPantalla(
             }
         ) { targetState ->
             when (targetState) {
-                EstadoFinal.ESPERANDO_AGITACION -> PantallaErrorSistema()
+                EstadoFinal.ESPERANDO_AGITACION -> PantallaErrorSistema(agitacionesRestantes)
                 EstadoFinal.REPRODUCIENDO_AUDIO -> PantallaAudioEnProgreso()
                 EstadoFinal.CONCLUSION -> PantallaConclusion(
                     onReiniciar = {
@@ -113,9 +129,8 @@ fun EventoFinalPantalla(
     }
 }
 
-// --- Sub-pantallas ---
 @Composable
-fun PantallaErrorSistema() {
+fun PantallaErrorSistema(agitacionesRestantes: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -130,13 +145,34 @@ fun PantallaErrorSistema() {
             fontSize = 48.sp,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(20.dp))
-        Text(
-            text = "Agita el teléfono para reiniciar el sistema",
-            color = Color.White,
-            fontSize = 22.sp,
-            textAlign = TextAlign.Center
-        )
+        Spacer(Modifier.height(40.dp))
+        if (agitacionesRestantes < AGITACIONES_NECESARIAS) {
+            Text(
+                text = "REINICIO FORZADO EN CURSO...",
+                color = Color.Yellow,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "$agitacionesRestantes",
+                color = Color.Yellow,
+                fontSize = 80.sp,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "AGITACIONES RESTANTES",
+                color = Color.Yellow,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        } else {
+            Text(
+                text = "Agita el teléfono para reiniciar el sistema",
+                color = Color.White,
+                fontSize = 22.sp,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

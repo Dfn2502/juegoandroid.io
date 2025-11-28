@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-// Importa el modelo para poder usarlo
 import mx.uacj.juego_ra.modelos.InformacionInteractiva
 import mx.uacj.juego_ra.ui.pantallas.EventoFantasmaPantalla
 import mx.uacj.juego_ra.ui.pantallas.EventoFinalPantalla
@@ -41,7 +40,7 @@ object Rutas {
     const val EVENTO_FANTASMA = "EventoFantasma"
     const val EVENTO_PIZARRON = "EventoPizarron"
     const val PANTALLA_RESULTADO_SCAN = "PantallaResultadoScan"
-    const val PANTALLA_RESULTADO_SCAN_ARG = "texto" // Nombre del argumento
+    const val PANTALLA_RESULTADO_SCAN_ARG = "texto"
     val PANTALLA_RESULTADO_SCAN_RUTA_COMPLETA =
         "$PANTALLA_RESULTADO_SCAN/{$PANTALLA_RESULTADO_SCAN_ARG}"
 }
@@ -55,7 +54,6 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
         startDestination = Rutas.PERMISOS
     ) {
 
-        // --- Pantallas iniciales ---
         composable(Rutas.PERMISOS) {
             PantallaPermisos(onPermisosConcedidos = {
                 navController.navigate(Rutas.INICIO) {
@@ -78,7 +76,6 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
             )
         }
 
-        // --- Grafo del juego ---
         navigation(
             startDestination = Rutas.PRINCIPAL,
             route = Rutas.JUEGO_GRAPH
@@ -96,20 +93,17 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
                 )
             }
             composable(Rutas.EVENTO_FINAL) { backStackEntry ->
-                // Obtenemos el ViewModel compartido del grafo del juego
                 val parentEntry = remember(backStackEntry) {
                     navController.getBackStackEntry(Rutas.JUEGO_GRAPH)
                 }
                 val controladorGeneralCompartido: ControladorGeneral = hiltViewModel(parentEntry)
 
-                // Llamamos a la pantalla que creamos para el final del juego
                 EventoFinalPantalla(
                     navegador = navController,
                     controlador_general = controladorGeneralCompartido
                 )
             }
 
-            // --- Pantalla de diálogo ---
             composable(Rutas.PANTALLA_DIALOGO_PISTA) { backStackEntry ->
                 val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Rutas.JUEGO_GRAPH) }
                 val controladorGeneralCompartido: ControladorGeneral = hiltViewModel(parentEntry)
@@ -121,7 +115,7 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
 
                 when (pistaActual?.nombre) {
                     "Evento 1 - El Aviso" -> {
-                        textoDialogo = "Al llegar, el teléfono vibra y aparece el logo distorsionado de DDMI."
+                        textoDialogo = "Algo pasa en DDMI y tu lo tienes que descubrir, estas listo?. Busca el codigo en el cartel oculto para desbloquear la primer pista"
                         textoBoton = "Continuar"
                         rutaSiguiente = Rutas.SCANNER_QR
                     }
@@ -145,7 +139,6 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
                 )
             }
 
-            // --- Scanner QR ---
             composable(Rutas.SCANNER_QR) { backStackEntry ->
                 val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Rutas.JUEGO_GRAPH) }
                 val controladorGeneralCompartido: ControladorGeneral = hiltViewModel(parentEntry)
@@ -153,8 +146,16 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
 
                 val onScanExitoso: () -> Unit = {
                     val textoPosterior = when (pistaActual?.nombre) {
-                        "Evento 1 - El Aviso" -> "Cinco fueron elegidos. Cinco fallaron. Encuentra sus notas antes de que te encuentren a ti."
-                        "Evento 4 — La biblioteca silenciosa" -> "El conocimiento no es el problema. Es lo que el programa hace con tus pensamientos."
+                        "Evento 1 - El Aviso" -> "Cinco fueron elegidos. Cinco fallaron. Encuentra sus notas antes de que te encuentren a ti." +
+                                " La casa de DDMI fue testigo de lo que paso"
+                        "Evento 4 — La biblioteca silenciosa" -> "El conocimiento no es el problema. Es lo que el programa hace con tus pensamientos. \n" +
+                                "ERROR DEL SISTEMA. UBICACIÓN DE DATOS CORRUPTOS DETECTADA.\n" +
+                                "\n" +
+                                "Necesitas ascender al siguiente nivel.\n" +
+                                "\n" +
+                                "El programa te espera donde las ideas maduran y se especializan. Busca la estructura principal del nivel superior de investigación.\n" +
+                                "\n" +
+                                "Allí, el error es visible. Tendrás que forzarlo a revelar la verdad."
                         else -> null
                     }
 
@@ -176,7 +177,6 @@ fun NavegacionApp(gestorUbicacion: GestorUbicacion) {
                 )
             }
 
-            // --- Resultado Scan ---
             composable(
                 route = Rutas.PANTALLA_RESULTADO_SCAN_RUTA_COMPLETA,
                 arguments = listOf(navArgument(Rutas.PANTALLA_RESULTADO_SCAN_ARG) { type = NavType.StringType })

@@ -31,6 +31,7 @@ playServicesMaps = "19.2.0"
 visionCommon = "17.3.0"
 playServicesMlkitBarcodeScanning = "18.3.1"
 runtimeLivedata = "1.9.5"
+uiGraphics = "1.9.5"
 
 [libraries]
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -71,6 +72,7 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "visionCommon" }
 play-services-mlkit-barcode-scanning = { group = "com.google.android.gms", name = "play-services-mlkit-barcode-scanning", version.ref = "playServicesMlkitBarcodeScanning" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

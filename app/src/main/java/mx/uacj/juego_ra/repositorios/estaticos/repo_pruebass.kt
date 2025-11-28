@@ -1,40 +1,34 @@
 package mx.uacj.juego_ra.repositorios.estaticos
 
 import android.location.Location
-import mx.uacj.juego_ra.R
-import mx.uacj.juego_ra.modelos.Informacion
 import mx.uacj.juego_ra.modelos.InformacionInteractiva
 import mx.uacj.juego_ra.modelos.Pista
 import mx.uacj.juego_ra.ui.controladores.Rutas
-import kotlin.compareTo
-import kotlin.inc
 
 object RepositorioPruebas {
 
 
     var _pistas = listOf(
-        // --- PISTA 1 CORREGIDA ---
-        // Ahora es Interactiva y usa 'ruta' para navegar al siguiente paso (ej. el scanner)
         Pista(
             nombre = "Evento 1 - El Aviso",
             ubicacion = Location("proveedor").apply {
-                latitude = 31.6290877
-                longitude = -106.4596694
+                latitude = 31.742637
+                longitude = -106.433608
             },
-            distancia_minima = 15f, // Añadido para consistencia
-            distancia_maxima = 150f, // Añadido para consistencia
+            distancia_minima = 15f,
+            distancia_maxima = 150f,
             cuerpo = InformacionInteractiva(
-                texto = "Al llegar, el teléfono vibra y aparece el logo distorsionado de DDMI. " +
-                        "/n Cinco fueron elegidos. Cinco fallaron. Encuentra sus notas antes de que te encuentren a ti.",
-                ruta = Rutas.PANTALLA_DIALOGO_PISTA // <-- La ruta a la que debe navegar, por ejemplo
+                texto = "Algo pasa en DDMI y tu lo tienes que descubrir, estas listo?. " +
+                        "Cinco fueron elegidos. Cinco fallaron. Encuentra sus notas antes de que te encuentren a ti. /n La casa de DDMI fue testigo de lo que paso",
+                ruta = Rutas.PANTALLA_DIALOGO_PISTA
             )
         ),
 
         Pista(
             nombre = "Evento 2 - El fantasma",
             ubicacion = Location("proveedor").apply {
-                latitude = 31.6290877
-                longitude = -106.4596694
+                latitude = 31.7421699
+                longitude = -106.4326037
             },
             distancia_minima = 15f,
             distancia_maxima = 150f,
@@ -47,8 +41,8 @@ object RepositorioPruebas {
         Pista(
             nombre = "Evento 3 — Lenguajes de programación",
             ubicacion = Location("proveedor").apply {
-                latitude = 31.6289821
-                longitude = -106.4598001
+                latitude = 31.7434431
+                longitude = -106.4322366
             },
             distancia_minima = 15f,
             distancia_maxima = 150f,
@@ -60,8 +54,8 @@ object RepositorioPruebas {
         Pista(
             nombre = "Evento 4 — La biblioteca silenciosa",
             ubicacion = Location("proveedor").apply {
-                latitude = 31.6290135
-                longitude = -106.4597049
+                latitude = 31.7430163
+                longitude = -106.4331737
             },
             distancia_minima = 15f,
             distancia_maxima = 150f,
@@ -71,12 +65,11 @@ object RepositorioPruebas {
             )
         ),
 
-        // --- PISTA 5 CORREGIDA ---
         Pista(
             nombre = "Evento 5 — ¿Que paso?",
             ubicacion = Location("proveedor").apply {
-                latitude = 31.6290135
-                longitude = -106.4597049
+                latitude = 31.7428811
+                longitude = -106.4303225
             },
             distancia_minima = 15f,
             distancia_maxima = 150f,
@@ -97,7 +90,6 @@ object RepositorioPruebas {
         if (indiceActual < _pistas.size - 1) {
             indiceActual++
         }
-        // Si ya no hay más pistas, se queda en la última
     }
 
     fun reiniciarPistas() {

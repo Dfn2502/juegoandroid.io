@@ -13,13 +13,10 @@ fun interactuarConPista(
 
     when (val cuerpo = pista.cuerpo) {
         is InformacionInteractiva -> {
-            // Navega a la ruta definida en la pista interactiva
             navegador.navigate(cuerpo.ruta)
-            // NO avanzamos la pista aquí, la pantalla destino debe hacerlo
         }
 
         else -> {
-            // Para pistas normales, avanzamos y regresamos al mapa
             controlador.avanzarSiguientePista()
 
             navegador.navigate(Rutas.PRINCIPAL) {

@@ -3,7 +3,6 @@ package mx.uacj.juego_ra
 import android.annotation.SuppressLint
 import android.Manifest
 import android.content.pm.PackageManager
-
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -12,25 +11,15 @@ import android.util.Pair
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -41,13 +30,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import mx.uacj.juego_ra.gestor_permisos.ParaLaSolictudDePermisos
-
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import mx.uacj.juego_ra.ui.atomos.VistaCamara
-import mx.uacj.juego_ra.ui.atomos.VistaReproductorAudio
 import mx.uacj.juego_ra.ui.controladores.NavegacionApp
-import mx.uacj.juego_ra.ui.pantallas.Principal
 import mx.uacj.juego_ra.ui.theme.Juego_raTheme
 import mx.uacj.juego_ra.view_models.GestorUbicacion
 import mx.uacj.juego_ra.view_models.servicios.ServicioCamara
@@ -86,14 +70,7 @@ class MainActivity : ComponentActivity() {
                                     gestor_ubicacion.actualizar_ubicacion_actual(ubicaion_nueva)
                                 },
 
-                                /*
-                                cuando_falle_al_obtener_ubicacion = { error_encontrado ->
-                                    texto_de_ubicacion = "Error: ${error_encontrado.localizedMessage}"
-                                },
-                                cuando_la_ultima_posicion_sea_nula = {
-                                    texto_de_ubicacion = "Error: la ubicacion es nula por alguna razon"
-                                }
-                                 */
+
                             )
                         },
                         sin_permisos_obtenidos = {
@@ -104,17 +81,8 @@ class MainActivity : ComponentActivity() {
                     ) {}
 
 
-                    //VistaCamara(servicio_de_camara = servicio_de_camara, modificador = Modifier.padding(innerPadding))
                     Box(modifier = Modifier.padding(innerPadding)){
-                        /*
-                        Image(
-                            painter = painterResource(R.drawable.imagen_1),
-                            contentDescription = "Una imagen de un arbol cuyas hojas son alas de mariposa. Muy bonita foto, lastima que si lees esto es porque no puedes ver.",
-                            contentScale = ContentScale.FillHeight,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                        */
-                        //NavegadorPrincipal(modificador = Modifier.padding(innerPadding))
+
                         NavegacionApp(gestor_ubicacion)
                     }
 
@@ -149,31 +117,13 @@ class MainActivity : ComponentActivity() {
                 .Builder(TimeUnit.SECONDS.toMillis(2))
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build()
-            ///constructor_del_puente_para_la_ubicacion.priority = Priority.PRIORITY_HIGH_ACCURACY
 
             conexion_para_obtener_ubicacion.requestLocationUpdates(
                 constructor_del_puente_para_la_ubicacion,
                 puente_para_recivir_updates_ubicacion,
                 Looper.getMainLooper()
             )
-
-
-            /*
-            conexion_para_obtener_ubicacion.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                CancellationTokenSource().token)
-                .addOnSuccessListener {ubicacion ->
-                    if(ubicacion != null){
-                        cuando_obtenga_la_ultima_posicion_correcta(Pair(ubicacion.latitude, ubicacion.longitude))
-                    }
-                    else {
-                        cuando_la_ultima_posicion_sea_nula()
-                    }
-                }
-                .addOnFailureListener{ error ->
-                    cuando_falle_al_obtener_ubicacion(error)
-                }
-             */
+            
         }
     }
 

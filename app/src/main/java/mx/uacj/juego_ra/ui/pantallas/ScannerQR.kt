@@ -108,7 +108,6 @@ fun CameraView(onQrCodeScanned: (String) -> Unit) {
                                 .addOnSuccessListener { barcodes ->
                                     for (barcode in barcodes) {
                                         barcode.rawValue?.let { qrValue ->
-                                            // ¡QR detectado!
                                             cameraProvider.unbindAll()
                                             onQrCodeScanned(qrValue)
                                         }

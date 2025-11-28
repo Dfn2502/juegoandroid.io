@@ -54,26 +54,19 @@ fun EventoPizarronPantalla(
                 val roll = event.values[1]
                 estaAlineado = kotlin.math.abs(pitch) < 0.1f && kotlin.math.abs(roll) < 0.1f
             }
+
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
         sensorManager.registerListener(listener, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI)
-
-        // Creamos una instancia de MediaPlayer que se liberará al salir
-        val mediaPlayer = MediaPlayer.create(context, R.raw.audio_luis)
-
-        onDispose {
-            sensorManager.unregisterListener(listener)
-            mediaPlayer.release()
-        }
+        onDispose { sensorManager.unregisterListener(listener) }
     }
 
     LaunchedEffect(estaAlineado) {
         if (estaAlineado && !resuelto) {
-            delay(2000)
+            kotlinx.coroutines.delay(2000)
             if (estaAlineado) {
                 resuelto = true
 
-                //
                 val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -82,7 +75,7 @@ fun EventoPizarronPantalla(
                 }
 
                 val mediaPlayer = MediaPlayer.create(context, R.raw.audio_luis)
-                mediaPlayer.setOnCompletionListener { mp -> mp.release() }
+                mediaPlayer.setOnCompletionListener { it.release() }
                 mediaPlayer.start()
             }
         }
@@ -100,13 +93,13 @@ fun EventoPizarronPantalla(
     }
 
     val colorFondo by animateColorAsState(
-        if (estaAlineado) Color.Green.copy(alpha = 0.3f) else Color.Red.copy(alpha = 0.3f)
+        if (estaAlineado) Color(0xFF003300) else Color(0xFF330000) // Verde oscuro / Rojo oscuro
     )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(colorFondo)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -115,31 +108,33 @@ fun EventoPizarronPantalla(
                 Text(
                     text = "Alinea los 0s y 1s...",
                     color = Color.White,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
+                    fontSize = 26.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 20.dp)
                 )
-                Spacer(Modifier.height(20.dp))
 
-                PizarronBinario(estaAlineado)
+                PizarronBinarioUI(estaAlineado)
 
                 Spacer(Modifier.height(20.dp))
                 Text(
                     text = "Inclina el teléfono hasta que el pizarrón se ilumine de verde.",
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center
+                    color = Color.LightGray,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp
                 )
             } else {
                 Text(
-                    text = "\"El código se escribía solo… como si alguien más estuviera programando conmigo.\"",
+                    text = "\"El código se escribía solo… como si alguien más estuviera programando conmigo.\n" +
+                            "La defensora del silencio resguarda algo perverso",
                     color = Color.Cyan,
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )
+
                 Spacer(Modifier.height(40.dp))
+
                 Button(
-                    onClick = {
-                        controlador_general.avanzarSiguientePista()
-                    },
+                    onClick = { controlador_general.avanzarSiguientePista() },
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(60.dp)
@@ -152,19 +147,19 @@ fun EventoPizarronPantalla(
 }
 
 @Composable
-fun PizarronBinario(estaAlineado: Boolean) {
-    val offsetX by animateDpAsState(if (estaAlineado) 0.dp else 10.dp)
+fun PizarronBinarioUI(estaAlineado: Boolean) {
+    val offsetX by animateDpAsState(if (estaAlineado) 0.dp else 12.dp)
     val colorTexto by animateColorAsState(if (estaAlineado) Color.Green else Color.White)
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         repeat(10) { fila ->
-            Row {
+            Row(horizontalArrangement = Arrangement.Center) {
                 repeat(20) { col ->
                     Text(
                         text = if ((fila + col) % 2 == 0) "0" else "1",
-                        fontSize = 16.sp,
+                        fontSize = 18.sp,
                         color = colorTexto,
-                        modifier = Modifier.offset(x = offsetX)
+                        modifier = Modifier.offset(x = offsetX, y = 0.dp)
                     )
                 }
             }

@@ -6,7 +6,7 @@ public interface PistaGenerica{
     val texto: String?
 }
 
-data class Informacion( // Es la pista con solo texto y posiblemente una imagen
+data class Informacion(
         override val tipo: TiposDePistas = TiposDePistas.texto,
         override val texto: String,
         val imagen: Int? = null

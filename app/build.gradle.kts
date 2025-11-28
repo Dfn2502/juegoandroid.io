@@ -62,7 +62,8 @@ dependencies {
 
     // --- Hilt & WorkManager ---
     implementation(libs.hilt.android)
-    implementation(libs.androidx.runtime.livedata) // 'hilt.viewmodel' es redundante
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.ui.graphics) // 'hilt.viewmodel' es redundante
     ksp(libs.hilt.android.compilador)
     implementation(libs.androidx.hilt.navigation.compose) // Add this line
 

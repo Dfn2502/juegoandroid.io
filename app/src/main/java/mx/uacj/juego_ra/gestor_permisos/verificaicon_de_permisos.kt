@@ -1,15 +1,12 @@
 package mx.uacj.juego_ra.gestor_permisos
 
 import android.Manifest
-import androidx.collection.emptyObjectList
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.util.fastFilter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import java.util.Collections.emptyList
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -25,7 +22,7 @@ fun ParaLaSolictudDePermisos(
             Manifest.permission.CAMERA,
         )
     ){ lista_permisos ->
-        var tengo_todos_los_permisos: Boolean = false // Variable bandera o flag
+        var tengo_todos_los_permisos: Boolean = false
 
         for (permiso in lista_permisos.values){
             if(!permiso){
@@ -50,16 +47,6 @@ fun ParaLaSolictudDePermisos(
         val tengo_los_permisos_revocados = estado_de_los_permisos.revokedPermissions.size == estado_de_los_permisos.permissions.size
 
         estado_de_los_permisos.permissions
-
-        /*
-        var lista_de_permisos_por_pedir: MutableList<PermissionState> = emptyList<PermissionState>()
-
-        for(permiso in estado_de_los_permisos.permissions){
-            if(!permiso.status.isGranted){
-                lista_de_permisos_por_pedir.add(permiso)
-            }
-        }
-        */
 
         val lista_de_permisos_por_pedir = estado_de_los_permisos.permissions.fastFilter { permiso ->
             !permiso.status.isGranted
